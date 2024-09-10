@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+      }
+      .container {
+        width: 80%;
+        margin: 0 auto;
+      }
+      .logout-button {
+        display: inline-block;
+        padding: 10px;
+        margin: 10px 0;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .logout-button:hover {
+        background-color: #c82333;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background-color: #fff;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+      th {
+        background-color: #f4f4f4;
+      }
+      a {
+        text-decoration: none;
+        color: #007bff;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>To-Do List</h1>
+      {% comment %}
+      <a href="{% url 'logout' %}">
+        <button class="logout-button">Logout</button>
+      </a>
+      {% endcomment %}
+      <form id="logout-form" method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-button">Logout</button>
+      </form>
+
+      <!-- Add to-do item link -->
+      <a href="{% url 'add_todo' %}">Add To-Do</a>
+
+      <!-- Display to-do list -->
+      <table>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Completed</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for todo in todos %}
+          <tr>
+            <td>{{ todo.task }}</td>
+            <td>{{ todo.completed }}</td>
+            <td>
+              <a href="{% url 'update_todo' todo.id %}">Update</a>
+              <a href="{% url 'delete_todo' todo.id %}">Delete</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3">No to-do items found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
+
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your To-Do List</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      h1 {
+        text-align: center;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      li {
+        background-color: #f4f4f4;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .task-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .task-actions a {
+        text-decoration: none;
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 3px;
+      }
+      .task-actions a:hover {
+        background-color: #0056b3;
+      }
+      .add-button {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Your To-Do List</h1>
+
+      <!-- Link to add a new to-do item -->
+      <div class="add-button">
+        <a href="{% url 'add_todo' %}">Add New To-Do</a>
+      </div>
+
+      <!-- Display the list of to-do items -->
+      <ul>
+        {% for todo in todos %}
+        <li>
+          <span
+            >{{ todo.task }} - {% if todo.completed %}Completed{% else
+            %}Incomplete{% endif %}</span
+          >
+          <div class="task-actions">
+            <!-- Link to update the to-do item -->
+            <a href="{% url 'update_todo' todo.id %}">Edit</a>
+
+            <!-- Link to delete the to-do item -->
+            <a href="{% url 'delete_todo' todo.id %}">Delete</a>
+          </div>
+        </li>
+        {% empty %}
+        <!-- Message when there are no to-do items -->
+        <li>No tasks yet. Add one!</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </body>
+</html>
+{% endcomment %} {% comment %} <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List</title>
+  </head>
+  <body>
+    <h1>To-Do List</h1>
+
+    <!-- Add new to-do item -->
+    <form method="POST">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Add</button>
+    </form>
+
+    <!-- Display all to-do items with delete button -->
+    <ul>
+      {% for todo in todos %}
+      <li>
+        {{ todo.title }} - {% if todo.completed %} Completed {% else %} Not
+        Completed {% endif %}
+
+        <!-- Delete button -->
+        <form
+          action="{% url 'delete_todo' todo.id %}"
+          method="POST"
+          style="display: inline"
+        >
+          {% csrf_token %}
+          <button type="submit">Delete</button>
+        </form>
+
+        <!-- Inline update form -->
+        <form method="POST" style="display: inline">
+          {% csrf_token %}
+          <input type="hidden" name="todo_id" value="{{ todo.id }}" />
+          <input type="text" name="title" value="{{ todo.title }}" />
+
+          <button type="submit">Update</button>
+        </form>
+      </li>
+      {% empty %}
+      <li>No to-do items yet!</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
+{% endcomment %}
