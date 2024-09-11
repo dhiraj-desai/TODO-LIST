@@ -18,9 +18,12 @@ Setup and Installation :
 2] Create a Virtual Environment
 To keep your project dependencies isolated, it's recommended to create a virtual environment.
 python -m venv venv
-## On linux computer
+
+ On linux computer
 source venv/bin/activate   
-# On Windows use `venv\Scripts\activate`
+
+#On Windows use 
+`venv\Scripts\activate`
 
 3] Install Dependencies
 
